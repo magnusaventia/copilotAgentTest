@@ -18,3 +18,4 @@ C:\Users\Magnus\source\repos\magnusaventia\copilotAgentTest\obj\Debug\net8.0-win
 C:\Users\Magnus\source\repos\magnusaventia\copilotAgentTest\obj\Debug\net8.0-windows\MunicipalQuizGame.pdb
 C:\Users\Magnus\source\repos\magnusaventia\copilotAgentTest\obj\Debug\net8.0-windows\MunicipalQuizGame.genruntimeconfig.cache
 C:\Users\Magnus\source\repos\magnusaventia\copilotAgentTest\obj\Debug\net8.0-windows\ref\MunicipalQuizGame.dll
+C:\Users\Magnus\source\repos\magnusaventia\copilotAgentTest\obj\Debug\net8.0-windows\MunicipalQuizGame.sourcelink.json

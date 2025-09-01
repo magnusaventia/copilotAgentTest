@@ -26,7 +26,7 @@ namespace MunicipalQuizGame.Models
                     CorrectAnswerIndex = 0,
                     Category = "Geografi",
                     Explanation = "Kautokeino kommune i Finnmark er Norges største kommune med et areal på 9 707 km².",
-                    ImagePath = "/Images/kautokeino_landscape.jpg"
+                    ImagePath = "/images/kautokeino_landscape.jpg"
                 },
                 new QuizQuestion
                 {
@@ -35,7 +35,7 @@ namespace MunicipalQuizGame.Models
                     CorrectAnswerIndex = 0,
                     Category = "Fakta",
                     Explanation = "Etter kommunereformen er det 356 kommuner i Norge per 2024.",
-                    ImagePath = "/Images/norway_map.jpg"
+                    ImagePath = "/images/norway_map.jpg"
                 },
                 new QuizQuestion
                 {
@@ -44,7 +44,7 @@ namespace MunicipalQuizGame.Models
                     CorrectAnswerIndex = 2,
                     Category = "Befolkning",
                     Explanation = "Oslo kommune har over 700 000 innbyggere og er Norges mest folkerike kommune.",
-                    ImagePath = "/Images/oslo_city.jpg"
+                    ImagePath = "/images/oslo_city.jpg"
                 },
                 new QuizQuestion
                 {
@@ -53,7 +53,7 @@ namespace MunicipalQuizGame.Models
                     CorrectAnswerIndex = 3,
                     Category = "Geografi",
                     Explanation = "Nordkapp kommune ligger lengst nord på fastlandet, men Longyearbyen på Svalbard er teknisk sett lengst nord.",
-                    ImagePath = "/Images/nordkapp_cliff.jpg"
+                    ImagePath = "/images/nordkapp_cliff.jpg"
                 },
                 new QuizQuestion
                 {
@@ -62,7 +62,7 @@ namespace MunicipalQuizGame.Models
                     CorrectAnswerIndex = 1,
                     Category = "Geografi",
                     Explanation = "Utsira kommune er Norges minste med bare 6,2 km² areal.",
-                    ImagePath = "/Images/utsira_island.jpg"
+                    ImagePath = "/images/utsira_island.jpg"
                 },
                 new QuizQuestion
                 {
@@ -71,7 +71,7 @@ namespace MunicipalQuizGame.Models
                     CorrectAnswerIndex = 1,
                     Category = "Historie",
                     Explanation = "Bergen fikk byrettigheter i 1070 og regnes som en av Norges eldste kommuner.",
-                    ImagePath = "/Images/bergen_harbor.jpg"
+                    ImagePath = "/images/bergen_harbor.jpg"
                 },
                 new QuizQuestion
                 {
@@ -80,7 +80,7 @@ namespace MunicipalQuizGame.Models
                     CorrectAnswerIndex = 0,
                     Category = "Fakta",
                     Explanation = "Norge har 11 fylker etter fylkesreformen.",
-                    ImagePath = "/Images/norway_regions.jpg"
+                    ImagePath = "/images/norway_regions.jpg"
                 },
                 new QuizQuestion
                 {
@@ -89,7 +89,7 @@ namespace MunicipalQuizGame.Models
                     CorrectAnswerIndex = 0,
                     Category = "Økonomi",
                     Explanation = "Bærum kommune har tradisjonelt hatt høyest gjennomsnittsinntekt i Norge.",
-                    ImagePath = "/Images/baerum_houses.jpg"
+                    ImagePath = "/images/baerum_houses.jpg"
                 },
                 new QuizQuestion
                 {
@@ -98,7 +98,7 @@ namespace MunicipalQuizGame.Models
                     CorrectAnswerIndex = 2,
                     Category = "Språk",
                     Explanation = "På norsk bruker vi ordet 'kommune' for lokale administrative enheter.",
-                    ImagePath = "/Images/municipal_building.jpg"
+                    ImagePath = "/images/municipal_building.jpg"
                 },
                 new QuizQuestion
                 {
@@ -107,7 +107,7 @@ namespace MunicipalQuizGame.Models
                     CorrectAnswerIndex = 1,
                     Category = "Geografi",
                     Explanation = "Vågan kommune i Lofoten har over 1000 øyer og holmer.",
-                    ImagePath = "/Images/lofoten_islands.jpg"
+                    ImagePath = "/images/lofoten_islands.jpg"
                 },
                 new QuizQuestion
                 {
@@ -116,7 +116,7 @@ namespace MunicipalQuizGame.Models
                     CorrectAnswerIndex = 0,
                     Category = "Politikk",
                     Explanation = "Lederen av en kommune kalles ordfører i Norge.",
-                    ImagePath = "/Images/mayor_office.jpg"
+                    ImagePath = "/images/mayor_office.jpg"
                 },
                 new QuizQuestion
                 {
@@ -125,7 +125,7 @@ namespace MunicipalQuizGame.Models
                     CorrectAnswerIndex = 2,
                     Category = "Klima",
                     Explanation = "Brekke kommune på Vestlandet har mest nedbør med over 3000mm årlig.",
-                    ImagePath = "/Images/rainy_western_norway.jpg"
+                    ImagePath = "/images/rainy_western_norway.jpg"
                 },
                 new QuizQuestion
                 {
@@ -134,7 +134,7 @@ namespace MunicipalQuizGame.Models
                     CorrectAnswerIndex = 1,
                     Category = "Geografi",
                     Explanation = "Lindesnes kommune ligger lengst sør på det norske fastlandet.",
-                    ImagePath = "/Images/lindesnes_lighthouse.jpg"
+                    ImagePath = "/images/lindesnes_lighthouse.jpg"
                 },
                 new QuizQuestion
                 {
@@ -143,7 +143,7 @@ namespace MunicipalQuizGame.Models
                     CorrectAnswerIndex = 0,
                     Category = "Befolkning",
                     Explanation = "Utsira kommune har bare rundt 200 innbyggere og er Norges minst folkerike kommune.",
-                    ImagePath = "/Images/small_village.jpg"
+                    ImagePath = "/images/small_village.jpg"
                 },
                 new QuizQuestion
                 {
@@ -152,7 +152,7 @@ namespace MunicipalQuizGame.Models
                     CorrectAnswerIndex = 1,
                     Category = "Historie",
                     Explanation = "Trondheim (Nidaros) var Norges hovedstad i middelalderen før Oslo tok over.",
-                    ImagePath = "/Images/trondheim_cathedral.jpg"
+                    ImagePath = "/images/trondheim_cathedral.jpg"
                 },
                 new QuizQuestion
                 {
@@ -161,7 +161,7 @@ namespace MunicipalQuizGame.Models
                     CorrectAnswerIndex = 1,
                     Category = "Infrastruktur",
                     Explanation = "Bergen kommune har flest tunneler på grunn av den krevende topografien.",
-                    ImagePath = "/Images/bergen_tunnel.jpg"
+                    ImagePath = "/images/bergen_tunnel.jpg"
                 },
                 new QuizQuestion
                 {
@@ -170,7 +170,7 @@ namespace MunicipalQuizGame.Models
                     CorrectAnswerIndex = 3,
                     Category = "Natur",
                     Explanation = "Alle kommuner nord for polarsirkelen opplever midnattssol om sommeren.",
-                    ImagePath = "/Images/midnight_sun.jpg"
+                    ImagePath = "/images/midnight_sun.jpg"
                 },
                 new QuizQuestion
                 {
@@ -179,7 +179,7 @@ namespace MunicipalQuizGame.Models
                     CorrectAnswerIndex = 0,
                     Category = "Politikk",
                     Explanation = "Kommunereformen reduserte antall kommuner fra 422 til 356.",
-                    ImagePath = "/Images/municipal_reform.jpg"
+                    ImagePath = "/images/municipal_reform.jpg"
                 },
                 new QuizQuestion
                 {
@@ -188,7 +188,7 @@ namespace MunicipalQuizGame.Models
                     CorrectAnswerIndex = 1,
                     Category = "Geografi",
                     Explanation = "Røros ligger høyest over havet av norske kommunesentre, på 628 moh.",
-                    ImagePath = "/Images/roros_mountains.jpg"
+                    ImagePath = "/images/roros_mountains.jpg"
                 },
                 new QuizQuestion
                 {
@@ -197,7 +197,7 @@ namespace MunicipalQuizGame.Models
                     CorrectAnswerIndex = 2,
                     Category = "Kultur",
                     Explanation = "Røros har en høy tetthet av museer relatert til gruvehistorien og UNESCO-statusen.",
-                    ImagePath = "/Images/roros_museum.jpg"
+                    ImagePath = "/images/roros_museum.jpg"
                 },
                 new QuizQuestion
                 {
@@ -206,7 +206,7 @@ namespace MunicipalQuizGame.Models
                     CorrectAnswerIndex = 1,
                     Category = "Transport",
                     Explanation = "Bodø er endestasjon for Nordlandsbanen og Norges nordligste jernbanestasjon.",
-                    ImagePath = "/Images/bodo_train_station.jpg"
+                    ImagePath = "/images/bodo_train_station.jpg"
                 },
                 new QuizQuestion
                 {
@@ -215,7 +215,7 @@ namespace MunicipalQuizGame.Models
                     CorrectAnswerIndex = 0,
                     Category = "Energi",
                     Explanation = "Fosen vindpark er verdens største vindpark på land og ligger i Trøndelag.",
-                    ImagePath = "/Images/wind_turbines.jpg"
+                    ImagePath = "/images/wind_turbines.jpg"
                 },
                 new QuizQuestion
                 {
@@ -224,7 +224,7 @@ namespace MunicipalQuizGame.Models
                     CorrectAnswerIndex = 1,
                     Category = "Geografi",
                     Explanation = "Tromsø kommune har en svært lang og kompleks kystlinje med mange øyer.",
-                    ImagePath = "/Images/tromso_coastline.jpg"
+                    ImagePath = "/images/tromso_coastline.jpg"
                 },
                 new QuizQuestion
                 {
@@ -233,7 +233,7 @@ namespace MunicipalQuizGame.Models
                     CorrectAnswerIndex = 0,
                     Category = "Historie",
                     Explanation = "Hammerfest var verdens nordligste by med elektrisk gatebelysning i 1891.",
-                    ImagePath = "/Images/hammerfest_lights.jpg"
+                    ImagePath = "/images/hammerfest_lights.jpg"
                 },
                 new QuizQuestion
                 {
@@ -242,7 +242,7 @@ namespace MunicipalQuizGame.Models
                     CorrectAnswerIndex = 1,
                     Category = "Klima",
                     Explanation = "Stavanger har et mildt kystklima med relativt stabile temperaturer året rundt.",
-                    ImagePath = "/Images/stavanger_climate.jpg"
+                    ImagePath = "/images/stavanger_climate.jpg"
                 },
                 new QuizQuestion
                 {
@@ -251,7 +251,7 @@ namespace MunicipalQuizGame.Models
                     CorrectAnswerIndex = 0,
                     Category = "Kultur",
                     Explanation = "Kautokeino har den største samiske befolkningen og er et viktig samisk kultursentrum.",
-                    ImagePath = "/Images/sami_culture.jpg"
+                    ImagePath = "/images/sami_culture.jpg"
                 },
                 new QuizQuestion
                 {
@@ -260,7 +260,7 @@ namespace MunicipalQuizGame.Models
                     CorrectAnswerIndex = 1,
                     Category = "Næring",
                     Explanation = "Tromsø har Norges største fiskeflåte og er et viktig fiskerisentrum.",
-                    ImagePath = "/Images/fishing_fleet.jpg"
+                    ImagePath = "/images/fishing_fleet.jpg"
                 },
                 new QuizQuestion
                 {
@@ -269,7 +269,7 @@ namespace MunicipalQuizGame.Models
                     CorrectAnswerIndex = 1,
                     Category = "Turisme",
                     Explanation = "Geiranger har en ekstremt høy tetthet av hoteller på grunn av turisttrafikken.",
-                    ImagePath = "/Images/geiranger_hotels.jpg"
+                    ImagePath = "/images/geiranger_hotels.jpg"
                 },
                 new QuizQuestion
                 {
@@ -278,7 +278,7 @@ namespace MunicipalQuizGame.Models
                     CorrectAnswerIndex = 2,
                     Category = "Utdanning",
                     Explanation = "NTNU i Trondheim har det største campus-området målt i areal.",
-                    ImagePath = "/Images/ntnu_campus.jpg"
+                    ImagePath = "/images/ntnu_campus.jpg"
                 },
                 new QuizQuestion
                 {
@@ -287,7 +287,7 @@ namespace MunicipalQuizGame.Models
                     CorrectAnswerIndex = 2,
                     Category = "Sport",
                     Explanation = "Oslo har det mest omfattende løypenettet med over 2600 km preparerte skiløyper.",
-                    ImagePath = "/Images/ski_trails.jpg"
+                    ImagePath = "/images/ski_trails.jpg"
                 }
             };
         }

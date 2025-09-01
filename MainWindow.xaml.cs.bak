@@ -59,7 +59,7 @@ namespace MunicipalQuizGame
             // Load and display the question image
             LoadQuestionImage(question.ImagePath);
             
-            // Clear previous options
+            // Clear previous options and reset visibility states
             OptionsPanel.Children.Clear();
             FeedbackBorder.Visibility = Visibility.Collapsed;
             NextButton.Visibility = Visibility.Collapsed;
@@ -83,7 +83,8 @@ namespace MunicipalQuizGame
                     Foreground = Brushes.White,
                     BorderBrush = borderBlue,
                     BorderThickness = new Thickness(1),
-                    Cursor = System.Windows.Input.Cursors.Hand
+                    Cursor = System.Windows.Input.Cursors.Hand,
+                    Visibility = Visibility.Visible // Explicitly set visibility
                 };
 
                 // Use the helper method for click handling
@@ -109,6 +110,9 @@ namespace MunicipalQuizGame
 
                 OptionsPanel.Children.Add(button);
             }
+
+            // Ensure OptionsPanel itself is visible
+            OptionsPanel.Visibility = Visibility.Visible;
 
             // Ensure options are scrolled to top if there are many
             var scrollViewer = GetScrollViewer(OptionsPanel);
@@ -145,12 +149,15 @@ namespace MunicipalQuizGame
             var originalBlue = new SolidColorBrush(Color.FromRgb(52, 152, 219)); // Original blue
             var originalBlueBorder = new SolidColorBrush(Color.FromRgb(41, 128, 185)); // Original blue border
 
-            // Remove click handlers and show correct/incorrect colors
+            // Update button states and colors - IMPORTANT: Keep buttons visible!
             foreach (Button button in OptionsPanel.Children)
             {
-                // Remove click handler to prevent further clicks
+                // Remove click handler to prevent further clicks but keep button visible
                 button.Click -= OnOptionSelectedHandler;
                 button.Cursor = System.Windows.Input.Cursors.Arrow;
+                
+                // Ensure button remains visible
+                button.Visibility = Visibility.Visible;
                 
                 int buttonIndex = OptionsPanel.Children.IndexOf(button);
                 
@@ -188,6 +195,8 @@ namespace MunicipalQuizGame
             }
 
             ExplanationText.Text = question.Explanation;
+            
+            // Show feedback and next button
             FeedbackBorder.Visibility = Visibility.Visible;
             NextButton.Visibility = Visibility.Visible;
             
