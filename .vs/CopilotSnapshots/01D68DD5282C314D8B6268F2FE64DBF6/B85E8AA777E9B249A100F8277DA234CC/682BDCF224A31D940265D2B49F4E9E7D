@@ -1,0 +1,192 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using MunicipalQuizGame.Models;
+
+namespace MunicipalQuizGame
+{
+    public partial class MainWindow : Window
+    {
+        private List<QuizQuestion> _questions;
+        private List<QuizQuestion> _shuffledQuestions;
+        private int _currentQuestionIndex;
+        private int _score;
+        private Random _random;
+
+        public MainWindow()
+        {
+            InitializeComponent();
+            _random = new Random();
+            InitializeQuiz();
+        }
+
+        private void InitializeQuiz()
+        {
+            _questions = QuizData.GetQuestions();
+            _shuffledQuestions = _questions.OrderBy(x => _random.Next()).ToList();
+            _currentQuestionIndex = 0;
+            _score = 0;
+            UpdateScoreDisplay();
+        }
+
+        private void StartButton_Click(object sender, RoutedEventArgs e)
+        {
+            WelcomeScreen.Visibility = Visibility.Collapsed;
+            QuizScreen.Visibility = Visibility.Visible;
+            ShowCurrentQuestion();
+        }
+
+        private void ShowCurrentQuestion()
+        {
+            if (_currentQuestionIndex >= _shuffledQuestions.Count)
+            {
+                ShowResults();
+                return;
+            }
+
+            var question = _shuffledQuestions[_currentQuestionIndex];
+            
+            CategoryText.Text = $"Category: {question.Category}";
+            QuestionText.Text = question.Question;
+            
+            // Clear previous options
+            OptionsPanel.Children.Clear();
+            FeedbackPanel.Visibility = Visibility.Collapsed;
+
+            // Create option buttons
+            for (int i = 0; i < question.Options.Count; i++)
+            {
+                var button = new Button
+                {
+                    Content = $"{(char)('A' + i)}. {question.Options[i]}",
+                    Margin = new Thickness(0, 5, 0, 5),
+                    Padding = new Thickness(15, 10, 15, 10),
+                    FontSize = 16,
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                    Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#3498DB")),
+                    Foreground = Brushes.White,
+                    BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#2980B9")),
+                    BorderThickness = new Thickness(1),
+                    Cursor = System.Windows.Input.Cursors.Hand
+                };
+
+                int optionIndex = i; // Capture for closure
+                button.Click += (s, e) => OnOptionSelected(optionIndex);
+                
+                // Add hover effect
+                button.MouseEnter += (s, e) => button.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#2980B9"));
+                button.MouseLeave += (s, e) => 
+                {
+                    if (button.Background != Brushes.Green && button.Background != Brushes.Red)
+                        button.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#3498DB"));
+                };
+
+                OptionsPanel.Children.Add(button);
+            }
+
+            UpdateScoreDisplay();
+        }
+
+        private void OnOptionSelected(int selectedIndex)
+        {
+            var question = _shuffledQuestions[_currentQuestionIndex];
+            bool isCorrect = selectedIndex == question.CorrectAnswerIndex;
+
+            // Disable all buttons and show correct/incorrect colors
+            foreach (Button button in OptionsPanel.Children)
+            {
+                button.IsEnabled = false;
+                int buttonIndex = OptionsPanel.Children.IndexOf(button);
+                
+                if (buttonIndex == question.CorrectAnswerIndex)
+                {
+                    button.Background = Brushes.Green;
+                }
+                else if (buttonIndex == selectedIndex && !isCorrect)
+                {
+                    button.Background = Brushes.Red;
+                }
+                else
+                {
+                    button.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#95A5A6"));
+                }
+            }
+
+            // Update score
+            if (isCorrect)
+            {
+                _score++;
+                FeedbackText.Text = "Correct!";
+                FeedbackText.Foreground = Brushes.Green;
+            }
+            else
+            {
+                FeedbackText.Text = "Wrong!";
+                FeedbackText.Foreground = Brushes.Red;
+            }
+
+            ExplanationText.Text = question.Explanation;
+            FeedbackPanel.Visibility = Visibility.Visible;
+            
+            UpdateScoreDisplay();
+        }
+
+        private void NextButton_Click(object sender, RoutedEventArgs e)
+        {
+            _currentQuestionIndex++;
+            ShowCurrentQuestion();
+        }
+
+        private void ShowResults()
+        {
+            QuizScreen.Visibility = Visibility.Collapsed;
+            ResultsScreen.Visibility = Visibility.Visible;
+
+            FinalScoreText.Text = $"Your Score: {_score}/{_shuffledQuestions.Count}";
+            
+            double percentage = (double)_score / _shuffledQuestions.Count * 100;
+            
+            if (percentage >= 90)
+            {
+                PerformanceText.Text = "Outstanding! You are a true municipality expert!";
+                PerformanceText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F1C40F"));
+            }
+            else if (percentage >= 70)
+            {
+                PerformanceText.Text = "Very good! You have solid knowledge of Norwegian municipalities!";
+                PerformanceText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#27AE60"));
+            }
+            else if (percentage >= 50)
+            {
+                PerformanceText.Text = "Not bad! You have basic knowledge!";
+                PerformanceText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#3498DB"));
+            }
+            else
+            {
+                PerformanceText.Text = "You should read more about Norwegian municipalities!";
+                PerformanceText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E74C3C"));
+            }
+        }
+
+        private void UpdateScoreDisplay()
+        {
+            ScoreText.Text = $"Score: {_score} | Question: {_currentQuestionIndex + 1}/{_shuffledQuestions.Count}";
+        }
+
+        private void RestartButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Reset everything and go back to welcome screen
+            ResultsScreen.Visibility = Visibility.Collapsed;
+            WelcomeScreen.Visibility = Visibility.Visible;
+            InitializeQuiz();
+        }
+
+        private void ExitButton_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+    }
+}

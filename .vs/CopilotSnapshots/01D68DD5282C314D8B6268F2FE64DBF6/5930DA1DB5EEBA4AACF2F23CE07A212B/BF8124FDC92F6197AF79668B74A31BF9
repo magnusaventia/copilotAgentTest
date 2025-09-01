@@ -1,0 +1,225 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using MunicipalQuizGame.Models;
+
+namespace MunicipalQuizGame
+{
+    public partial class MainWindow : Window
+    {
+        private List<QuizQuestion>? _questions;
+        private List<QuizQuestion>? _shuffledQuestions;
+        private int _currentQuestionIndex;
+        private int _score;
+        private Random _random;
+
+        public MainWindow()
+        {
+            InitializeComponent();
+            _random = new Random();
+            InitializeQuiz();
+        }
+
+        private void InitializeQuiz()
+        {
+            // Get all available questions (30 total)
+            _questions = QuizData.GetQuestions();
+            
+            // Randomly select 12 questions from the pool for this quiz session
+            _shuffledQuestions = _questions.OrderBy(x => _random.Next()).Take(12).ToList();
+            
+            _currentQuestionIndex = 0;
+            _score = 0;
+            UpdateScoreDisplay();
+        }
+
+        private void StartButton_Click(object sender, RoutedEventArgs e)
+        {
+            WelcomeScreen.Visibility = Visibility.Collapsed;
+            QuizScreen.Visibility = Visibility.Visible;
+            ShowCurrentQuestion();
+        }
+
+        private void ShowCurrentQuestion()
+        {
+            if (_shuffledQuestions == null || _currentQuestionIndex >= _shuffledQuestions.Count)
+            {
+                ShowResults();
+                return;
+            }
+
+            var question = _shuffledQuestions[_currentQuestionIndex];
+            
+            CategoryText.Text = $"Kategori: {question.Category}";
+            QuestionText.Text = question.Question;
+            
+            // Clear previous options
+            OptionsPanel.Children.Clear();
+            FeedbackBorder.Visibility = Visibility.Collapsed;
+            NextButton.Visibility = Visibility.Collapsed;
+
+            // Create option buttons
+            for (int i = 0; i < question.Options.Count; i++)
+            {
+                var button = new Button
+                {
+                    Content = $"{(char)('A' + i)}. {question.Options[i]}",
+                    Margin = new Thickness(0, 5, 0, 5),
+                    Padding = new Thickness(15, 10, 15, 10),
+                    FontSize = 16,
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                    Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#3498DB")),
+                    Foreground = Brushes.White,
+                    BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#2980B9")),
+                    BorderThickness = new Thickness(1),
+                    Cursor = System.Windows.Input.Cursors.Hand
+                };
+
+                int optionIndex = i; // Capture for closure
+                button.Click += (s, e) => OnOptionSelected(optionIndex);
+                
+                // Add hover effect - only works when button is enabled
+                button.MouseEnter += (s, e) => 
+                {
+                    if (button.IsEnabled && button.Background != Brushes.Green && button.Background != Brushes.Red)
+                        button.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#2980B9"));
+                };
+                button.MouseLeave += (s, e) => 
+                {
+                    if (button.IsEnabled && button.Background != Brushes.Green && button.Background != Brushes.Red)
+                        button.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#3498DB"));
+                };
+
+                OptionsPanel.Children.Add(button);
+            }
+
+            // Ensure options are scrolled to top if there are many
+            var scrollViewer = GetScrollViewer(OptionsPanel);
+            if (scrollViewer != null)
+            {
+                scrollViewer.ScrollToTop();
+            }
+
+            UpdateScoreDisplay();
+        }
+
+        // Helper method to find ScrollViewer parent
+        private ScrollViewer? GetScrollViewer(DependencyObject child)
+        {
+            DependencyObject parent = VisualTreeHelper.GetParent(child);
+            if (parent == null) return null;
+            
+            if (parent is ScrollViewer scrollViewer)
+                return scrollViewer;
+            
+            return GetScrollViewer(parent);
+        }
+
+        private void OnOptionSelected(int selectedIndex)
+        {
+            if (_shuffledQuestions == null) return;
+            
+            var question = _shuffledQuestions[_currentQuestionIndex];
+            bool isCorrect = selectedIndex == question.CorrectAnswerIndex;
+
+            // Disable all buttons and show correct/incorrect colors
+            foreach (Button button in OptionsPanel.Children)
+            {
+                button.IsEnabled = false;
+                int buttonIndex = OptionsPanel.Children.IndexOf(button);
+                
+                if (buttonIndex == question.CorrectAnswerIndex)
+                {
+                    // Always highlight the correct answer in green
+                    button.Background = Brushes.Green;
+                }
+                else if (buttonIndex == selectedIndex && !isCorrect)
+                {
+                    // Highlight the wrong selected answer in red
+                    button.Background = Brushes.Red;
+                }
+                // Leave other buttons unchanged (keep their original blue color)
+            }
+
+            // Update score and show feedback
+            if (isCorrect)
+            {
+                _score++;
+                FeedbackText.Text = "Riktig!";
+                FeedbackText.Foreground = Brushes.Green;
+            }
+            else
+            {
+                FeedbackText.Text = "Feil!";
+                FeedbackText.Foreground = Brushes.Red;
+            }
+
+            ExplanationText.Text = question.Explanation;
+            FeedbackBorder.Visibility = Visibility.Visible;
+            NextButton.Visibility = Visibility.Visible;
+            
+            UpdateScoreDisplay();
+        }
+
+        private void NextButton_Click(object sender, RoutedEventArgs e)
+        {
+            _currentQuestionIndex++;
+            ShowCurrentQuestion();
+        }
+
+        private void ShowResults()
+        {
+            if (_shuffledQuestions == null) return;
+            
+            QuizScreen.Visibility = Visibility.Collapsed;
+            ResultsScreen.Visibility = Visibility.Visible;
+
+            FinalScoreText.Text = $"Din poengsum: {_score}/{_shuffledQuestions.Count}";
+            
+            double percentage = (double)_score / _shuffledQuestions.Count * 100;
+            
+            if (percentage >= 90)
+            {
+                PerformanceText.Text = "Fantastisk! Du er en ekte kommune-ekspert!";
+                PerformanceText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F1C40F"));
+            }
+            else if (percentage >= 70)
+            {
+                PerformanceText.Text = "Meget bra! Du har god kunnskap om norske kommuner!";
+                PerformanceText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#27AE60"));
+            }
+            else if (percentage >= 50)
+            {
+                PerformanceText.Text = "Ikke verst! Du har grunnleggende kunnskap!";
+                PerformanceText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#3498DB"));
+            }
+            else
+            {
+                PerformanceText.Text = "Du bør lese mer om norske kommuner!";
+                PerformanceText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E74C3C"));
+            }
+        }
+
+        private void UpdateScoreDisplay()
+        {
+            if (_shuffledQuestions == null) return;
+            ScoreText.Text = $"Poeng: {_score} | Sporsmal: {_currentQuestionIndex + 1}/{_shuffledQuestions.Count}";
+        }
+
+        private void RestartButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Reset everything and go back to welcome screen
+            ResultsScreen.Visibility = Visibility.Collapsed;
+            WelcomeScreen.Visibility = Visibility.Visible;
+            InitializeQuiz();
+        }
+
+        private void ExitButton_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+    }
+}}
