@@ -1,0 +1,130 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using MunicipalQuizGame.Models;
+using MunicipalQuizGame.Services;
+
+namespace MunicipalQuizGame.Pages
+{
+    public class QuizModel : PageModel
+    {
+        private readonly QuizService _quizService;
+
+        public QuizModel(QuizService quizService)
+        {
+            _quizService = quizService;
+        }
+
+        public QuizQuestion? CurrentQuestion { get; set; }
+        public int CurrentQuestionIndex { get; set; }
+        public int TotalQuestions { get; set; }
+        public int Score { get; set; }
+        public bool IsAnswered { get; set; }
+        public bool IsCorrect { get; set; }
+        public int? SelectedOption { get; set; }
+
+        public IActionResult OnGet()
+        {
+            // Check if this is a fresh start or continuing
+            if (HttpContext.Session.GetString("Questions") == null)
+            {
+                InitializeQuizSession();
+            }
+            else
+            {
+                LoadQuizSession();
+            }
+            
+            LoadCurrentQuestion();
+            
+            // Check if quiz should be completed
+            if (CurrentQuestionIndex >= TotalQuestions)
+            {
+                return RedirectToPage("/Results");
+            }
+            
+            return Page();
+        }
+
+        public IActionResult OnPost(int selectedOption)
+        {
+            LoadQuizSession();
+            LoadCurrentQuestion();
+            
+            if (CurrentQuestion == null) 
+            {
+                // If no current question, reinitialize
+                InitializeQuizSession();
+                LoadCurrentQuestion();
+                return Page();
+            }
+            
+            SelectedOption = selectedOption;
+            IsCorrect = selectedOption == CurrentQuestion.CorrectAnswerIndex;
+            IsAnswered = true;
+            
+            if (IsCorrect)
+            {
+                Score++;
+                HttpContext.Session.SetInt32("Score", Score);
+            }
+            
+            return Page();
+        }
+
+        public IActionResult OnGetNext()
+        {
+            LoadQuizSession();
+            CurrentQuestionIndex++;
+            
+            // Save the updated question index
+            HttpContext.Session.SetInt32("CurrentQuestionIndex", CurrentQuestionIndex);
+            
+            // Check if quiz is complete
+            if (CurrentQuestionIndex >= TotalQuestions)
+            {
+                return RedirectToPage("/Results");
+            }
+            
+            // Redirect back to the quiz page to show next question
+            return RedirectToPage("/Quiz");
+        }
+
+        private void InitializeQuizSession()
+        {
+            var questions = _quizService.GetShuffledQuestions(12);
+            HttpContext.Session.SetString("Questions", System.Text.Json.JsonSerializer.Serialize(questions));
+            HttpContext.Session.SetInt32("CurrentQuestionIndex", 0);
+            HttpContext.Session.SetInt32("Score", 0);
+            HttpContext.Session.SetInt32("TotalQuestions", questions.Count);
+            
+            CurrentQuestionIndex = 0;
+            Score = 0;
+            TotalQuestions = questions.Count;
+        }
+
+        private void LoadQuizSession()
+        {
+            CurrentQuestionIndex = HttpContext.Session.GetInt32("CurrentQuestionIndex") ?? 0;
+            Score = HttpContext.Session.GetInt32("Score") ?? 0;
+            TotalQuestions = HttpContext.Session.GetInt32("TotalQuestions") ?? 12;
+        }
+
+        private void LoadCurrentQuestion()
+        {
+            var questionsJson = HttpContext.Session.GetString("Questions");
+            if (!string.IsNullOrEmpty(questionsJson))
+            {
+                var questions = System.Text.Json.JsonSerializer.Deserialize<List<QuizQuestion>>(questionsJson);
+                if (questions != null && CurrentQuestionIndex < questions.Count)
+                {
+                    CurrentQuestion = questions[CurrentQuestionIndex];
+                }
+                else
+                {
+                    // If we're at or past the end, don't set a current question
+                    CurrentQuestion = null;
+                }
+            }
+        }
+    }
+}

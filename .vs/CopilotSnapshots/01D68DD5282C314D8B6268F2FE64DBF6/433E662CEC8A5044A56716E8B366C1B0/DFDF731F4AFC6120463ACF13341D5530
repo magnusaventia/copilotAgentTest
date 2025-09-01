@@ -1,0 +1,249 @@
+﻿@page
+@page "/quiz/next"
+@model QuizModel
+@{
+    ViewData["Title"] = "Quiz - Norske Kommuner";
+}
+
+<div class="quiz-screen">
+    @if (Model.CurrentQuestion != null)
+    {
+        <section aria-labelledby="question-category" class="question-section">
+            <h2 id="question-category" class="category">Kategori: @Model.CurrentQuestion.Category</h2>
+            
+            @if (!string.IsNullOrEmpty(Model.CurrentQuestion.ImagePath))
+            {
+                <div class="question-image" role="img" aria-describedby="image-description">
+                    <div style="background: linear-gradient(135deg, #E74C3C, #3498DB); color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; border-radius: 5px; font-size: 18px; text-align: center; padding: 1rem;">
+                        <span style="font-size: 3rem; margin-bottom: 1rem;">📷</span>
+                        <span style="font-weight: 600;">@Model.CurrentQuestion.Category</span>
+                        <small id="image-description" style="font-size: 12px; opacity: 0.8; margin-top: 0.5rem;">
+                            @Model.CurrentQuestion.ImagePath.Split('/').Last().Replace(".jpg", "").Replace("_", " ")
+                        </small>
+                    </div>
+                </div>
+            }
+            
+            <h3 class="question-text" id="current-question">@Model.CurrentQuestion.Question</h3>
+        </section>
+        
+        <section aria-labelledby="answer-options" class="options-section">
+            <h4 id="answer-options" class="visually-hidden">Svaralternativer</h4>
+            <form method="post" class="options-container" role="group" 
+                  aria-labelledby="current-question" 
+                  aria-describedby="question-instructions">
+                  
+                <div id="question-instructions" class="visually-hidden">
+                    Velg ett av svaralternativene ved å klikke på knappen. 
+                    Spørsmål @(Model.CurrentQuestionIndex + 1) av @Model.TotalQuestions.
+                </div>
+                
+                @for (int i = 0; i < Model.CurrentQuestion.Options.Count; i++)
+                {
+                    var optionLetter = (char)('A' + i);
+                    var isSelected = Model.SelectedOption == i;
+                    var isCorrect = i == Model.CurrentQuestion.CorrectAnswerIndex;
+                    var buttonClass = "option-button";
+                    
+                    if (Model.IsAnswered)
+                    {
+                        if (isSelected && !isCorrect)
+                            buttonClass += " incorrect";
+                        if (isCorrect)
+                            buttonClass += " correct";
+                    }
+                    
+                    <button type="submit" 
+                            name="selectedOption" 
+                            value="@i" 
+                            class="@buttonClass"
+                            aria-describedby="option-@i-description"
+                            @(Model.IsAnswered ? "disabled" : "")
+                            @if (Model.IsAnswered && isCorrect) { <text>aria-label="Riktig svar: @optionLetter. @Model.CurrentQuestion.Options[i]"</text> }
+                            @if (Model.IsAnswered && isSelected && !isCorrect) { <text>aria-label="Ditt svar (feil): @optionLetter. @Model.CurrentQuestion.Options[i]"</text> }>
+                        
+                        <span class="option-letter" aria-hidden="true">@optionLetter.</span>
+                        <span class="option-text">@Model.CurrentQuestion.Options[i]</span>
+                        
+                        @if (Model.IsAnswered && isCorrect)
+                        {
+                            <span class="option-status" aria-label="Riktig svar">✓</span>
+                        }
+                        @if (Model.IsAnswered && isSelected && !isCorrect)
+                        {
+                            <span class="option-status" aria-label="Feil svar">✗</span>
+                        }
+                        
+                        <div id="option-@i-description" class="visually-hidden">
+                            @if (Model.IsAnswered)
+                            {
+                                @if (isCorrect)
+                                {
+                                    <text>Dette er det riktige svaret.</text>
+                                }
+                                else if (isSelected)
+                                {
+                                    <text>Du valgte dette svaret, men det er feil.</text>
+                                }
+                                else
+                                {
+                                    <text>Dette svaret ble ikke valgt.</text>
+                                }
+                            }
+                            else
+                            {
+                                <text>Svaralternativ @optionLetter</text>
+                            }
+                        </div>
+                    </button>
+                }
+            </form>
+        </section>
+        
+        @if (Model.IsAnswered)
+        {
+            <section class="feedback-panel show" 
+                     role="region" 
+                     aria-labelledby="feedback-heading"
+                     aria-live="polite">
+                <h4 id="feedback-heading" class="feedback-text @(Model.IsCorrect ? "correct" : "incorrect")">
+                    @(Model.IsCorrect ? "Riktig!" : "Feil!")
+                </h4>
+                <div class="explanation-text" role="note" aria-label="Forklaring">
+                    @Model.CurrentQuestion.Explanation
+                </div>
+            </section>
+            
+            <nav class="navigation-section" aria-label="Quiz navigasjon">
+                @if (Model.CurrentQuestionIndex < Model.TotalQuestions - 1)
+                {
+                    <a href="/quiz/next?handler=Next" 
+                       class="btn btn-primary next-button show"
+                       aria-describedby="next-description">
+                        Neste spørsmål
+                    </a>
+                    <div id="next-description" class="visually-hidden">
+                        Gå til spørsmål @(Model.CurrentQuestionIndex + 2) av @Model.TotalQuestions
+                    </div>
+                }
+                else
+                {
+                    <a href="/quiz/next?handler=Next" 
+                       class="btn btn-primary next-button show"
+                       aria-describedby="results-description">
+                        Se resultater
+                    </a>
+                    <div id="results-description" class="visually-hidden">
+                        Avslutt quiz og se dine resultater
+                    </div>
+                }
+            </nav>
+        }
+    }
+    else
+    {
+        <div class="welcome-screen" role="status" aria-live="polite">
+            <h2>Starter quiz...</h2>
+            <p>Laster spørsmål...</p>
+        </div>
+    }
+</div>
+
+<style>
+/* Screen reader only content */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.option-button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.option-letter {
+    font-weight: bold;
+    font-size: 1.1em;
+    min-width: 2rem;
+}
+
+.option-text {
+    flex: 1;
+    text-align: left;
+}
+
+.option-status {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-left: auto;
+}
+
+.navigation-section {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}
+</style>
+
+@section Scripts {
+    <script>
+        // Simplified and robust JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                console.log('[Quiz] Page loaded, updating score display...');
+                
+                // Get the score display element
+                var scoreDisplay = document.getElementById('scoreDisplay');
+                if (scoreDisplay) {
+                    // Build score text using simple concatenation
+                    var score = '@Model.Score';
+                    var currentQ = '@(Model.CurrentQuestionIndex + 1)';
+                    var totalQ = '@Model.TotalQuestions';
+                    
+                    var scoreText = 'Poeng: ' + score + ' | Sporsmal: ' + currentQ + '/' + totalQ;
+                    scoreDisplay.textContent = scoreText;
+                    
+                    console.log('[Quiz] Score updated to:', scoreText);
+                } else {
+                    console.error('[Quiz] Score display element not found!');
+                }
+                
+                // Enhanced keyboard navigation
+                var buttons = document.querySelectorAll('.option-button:not([disabled])');
+                console.log('[Quiz] Found', buttons.length, 'option buttons');
+                
+                buttons.forEach(function(button, index) {
+                    button.addEventListener('keydown', function(e) {
+                        if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+                            e.preventDefault();
+                            var nextIndex = (index + 1) % buttons.length;
+                            buttons[nextIndex].focus();
+                        } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+                            e.preventDefault();
+                            var prevIndex = (index - 1 + buttons.length) % buttons.length;
+                            buttons[prevIndex].focus();
+                        }
+                    });
+                });
+                
+            } catch (error) {
+                console.error('[Quiz] JavaScript error:', error);
+                
+                // Emergency fallback
+                var scoreDisplay = document.getElementById('scoreDisplay');
+                if (scoreDisplay) {
+                    scoreDisplay.textContent = 'Poeng: @Model.Score | Sporsmal: @(Model.CurrentQuestionIndex + 1)/@Model.TotalQuestions';
+                }
+            }
+        });
+    </script>
+}

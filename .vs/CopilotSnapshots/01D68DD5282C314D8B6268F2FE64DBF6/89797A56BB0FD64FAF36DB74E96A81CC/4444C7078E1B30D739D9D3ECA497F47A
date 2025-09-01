@@ -1,0 +1,100 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Norske Kommuner Quiz";
+}
+
+<section class="welcome-screen" role="main" aria-labelledby="welcome-heading">
+    <h1 id="welcome-heading" class="welcome-title">
+        Velkommen til Norske Kommuner Quiz!
+    </h1>
+    <p class="welcome-subtitle">
+        Test din kunnskap om norske kommuner! 
+        <br>
+        <small>Denne quiz-en inneholder 12 spørsmål om norsk geografi, historie og kommunal organisering.</small>
+    </p>
+    
+    <div class="welcome-actions" role="group" aria-labelledby="welcome-heading">
+        <a href="/quiz" 
+           class="btn btn-primary btn-large"
+           role="button"
+           aria-describedby="quiz-description">
+            Start Quiz
+        </a>
+        
+        <div id="quiz-description" class="visually-hidden">
+            Starter en interaktiv quiz med 12 spørsmål om norske kommuner. 
+            Quiz-en tar omtrent 5-10 minutter å fullføre.
+        </div>
+    </div>
+    
+    <div class="welcome-info" aria-labelledby="accessibility-info">
+        <h2 id="accessibility-info" class="visually-hidden">Tilgjengelighetsinfo</h2>
+        <p>
+            <small>
+                📍 Tilgjengelig for alle brukere<br>
+                ⌨️ Støtter tastaturnavigasjon<br>
+                🔊 Kompatibel med skjermlesere<br>
+                🎨 Støtter høy kontrast og mørk modus
+            </small>
+        </p>
+    </div>
+</section>
+
+<style>
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.welcome-actions {
+    margin: 2rem 0;
+}
+
+.welcome-info {
+    margin-top: 3rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    max-width: 400px;
+}
+
+.welcome-info p {
+    margin: 0;
+    color: #555;
+    line-height: 1.8;
+}
+</style>
+
+@section Scripts {
+    <script>
+        // Update score display for welcome screen
+        document.getElementById('scoreDisplay').textContent = 'Poeng: 0 | Spørsmål: 0/12';
+        
+        // Add focus management
+        document.addEventListener('DOMContentLoaded', function() {
+            // Focus the main heading for screen readers
+            document.getElementById('welcome-heading').focus();
+            
+            // Add enhanced keyboard support for the start button
+            const startButton = document.querySelector('a[href="/quiz"]');
+            if (startButton) {
+                startButton.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        window.location.href = '/quiz';
+                    }
+                });
+            }
+        });
+    </script>
+}

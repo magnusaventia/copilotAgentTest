@@ -1,0 +1,4 @@
+﻿@using MunicipalQuizGame
+@using MunicipalQuizGame.Pages
+@namespace MunicipalQuizGame.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers

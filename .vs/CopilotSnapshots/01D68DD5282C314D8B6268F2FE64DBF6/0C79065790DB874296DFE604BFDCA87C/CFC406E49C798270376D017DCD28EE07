@@ -1,0 +1,70 @@
+﻿@page
+@model QuizModel
+@{
+    ViewData["Title"] = "Quiz - Norske Kommuner";
+}
+
+<div class="quiz-screen">
+    @if (Model.CurrentQuestion != null)
+    {
+        <div class="category">Kategori: @Model.CurrentQuestion.Category</div>
+        
+        @if (!string.IsNullOrEmpty(Model.CurrentQuestion.ImagePath))
+        {
+            <div class="question-image">
+                <img src="~/images@(Model.CurrentQuestion.ImagePath.Replace("/Images", ""))" alt="Question image" />
+            </div>
+        }
+        
+        <div class="question-text">@Model.CurrentQuestion.Question</div>
+        
+        <form method="post" class="options-container">
+            @for (int i = 0; i < Model.CurrentQuestion.Options.Count; i++)
+            {
+                var optionId = $"option{i}";
+                <button type="submit" name="selectedOption" value="@i" 
+                        class="option-button @(Model.SelectedOption == i ? (Model.IsAnswered ? (i == Model.CurrentQuestion.CorrectAnswerIndex ? "correct" : "incorrect") : "") : "") @(Model.IsAnswered && i == Model.CurrentQuestion.CorrectAnswerIndex ? "correct" : "")"
+                        @(Model.IsAnswered ? "disabled" : "")>
+                    @((char)('A' + i)). @Model.CurrentQuestion.Options[i]
+                </button>
+            }
+        </form>
+        
+        @if (Model.IsAnswered)
+        {
+            <div class="feedback-panel show">
+                <div class="feedback-text @(Model.IsCorrect ? "correct" : "incorrect")">
+                    @(Model.IsCorrect ? "Riktig!" : "Feil!")
+                </div>
+                <div class="explanation-text">@Model.CurrentQuestion.Explanation</div>
+            </div>
+            
+            @if (Model.CurrentQuestionIndex < Model.TotalQuestions - 1)
+            {
+                <div style="text-align: center;">
+                    <a href="/quiz/next" class="btn btn-primary next-button show">Neste sporsmal</a>
+                </div>
+            }
+            else
+            {
+                <div style="text-align: center;">
+                    <a href="/results" class="btn btn-primary next-button show">Se resultater</a>
+                </div>
+            }
+        }
+    }
+    else
+    {
+        <div class="welcome-screen">
+            <h2>Starter quiz...</h2>
+            <p>Laster sporsmal...</p>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        // Update score display
+        document.getElementById('scoreDisplay').textContent = 'Poeng: @Model.Score | Sporsmal: @(Model.CurrentQuestionIndex + 1)/@Model.TotalQuestions';
+    </script>
+}

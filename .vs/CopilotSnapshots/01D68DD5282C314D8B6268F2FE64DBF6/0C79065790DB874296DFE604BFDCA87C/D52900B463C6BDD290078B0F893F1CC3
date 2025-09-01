@@ -1,0 +1,31 @@
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+using MunicipalQuizGame.Services;
+
+namespace MunicipalQuizGame.Pages
+{
+    public class ResultsModel : PageModel
+    {
+        private readonly QuizService _quizService;
+
+        public ResultsModel(QuizService quizService)
+        {
+            _quizService = quizService;
+        }
+
+        public int Score { get; set; }
+        public int TotalQuestions { get; set; }
+        public double Percentage { get; set; }
+        public string PerformanceMessage { get; set; } = string.Empty;
+        public string PerformanceClass { get; set; } = string.Empty;
+
+        public void OnGet()
+        {
+            Score = HttpContext.Session.GetInt32("Score") ?? 0;
+            TotalQuestions = HttpContext.Session.GetInt32("TotalQuestions") ?? 12;
+            
+            Percentage = _quizService.CalculatePercentage(Score, TotalQuestions);
+            PerformanceMessage = _quizService.GetPerformanceMessage(Percentage);
+            PerformanceClass = _quizService.GetPerformanceClass(Percentage);
+        }
+    }
+}

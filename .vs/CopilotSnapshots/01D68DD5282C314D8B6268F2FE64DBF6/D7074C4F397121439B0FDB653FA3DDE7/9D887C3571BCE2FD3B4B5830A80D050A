@@ -1,0 +1,302 @@
+﻿/* CSS for Municipal Quiz */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #F8F9FA;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header */
+.header {
+    background-color: #E74C3C;
+    color: white;
+    padding: 15px 20px;
+    text-align: center;
+}
+
+.header h1 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.score-display {
+    font-size: 16px;
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    padding: 20px;
+}
+
+/* Welcome Screen */
+.welcome-screen {
+    text-align: center;
+    padding: 50px 20px;
+}
+
+.welcome-title {
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #2C3E50;
+}
+
+.welcome-subtitle {
+    font-size: 16px;
+    color: #7F8C8D;
+    margin-bottom: 30px;
+}
+
+/* Quiz Screen */
+.quiz-screen {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.category {
+    text-align: center;
+    font-size: 14px;
+    color: #95A5A6;
+    margin: 10px 0;
+}
+
+.question-image {
+    background: white;
+    border: 1px solid #BDC3C7;
+    border-radius: 5px;
+    margin: 0 0 10px 0;
+    max-height: 150px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.question-image img {
+    max-width: 100%;
+    max-height: 150px;
+    object-fit: cover;
+}
+
+.question-text {
+    font-size: 20px;
+    font-weight: 600;
+    text-align: center;
+    margin: 20px 0;
+    color: #2C3E50;
+}
+
+.options-container {
+    margin: 20px 0;
+    max-height: 220px;
+    overflow-y: auto;
+}
+
+.option-button {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin: 5px 0;
+    background-color: #3498DB;
+    color: white;
+    border: 1px solid #2980B9;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: left;
+    transition: background-color 0.2s;
+}
+
+.option-button:hover:not(.selected) {
+    background-color: #2980B9;
+}
+
+.option-button.correct {
+    background-color: #27AE60;
+    border-color: #27AE60;
+}
+
+.option-button.incorrect {
+    background-color: #E74C3C;
+    border-color: #E74C3C;
+}
+
+.option-button.selected {
+    cursor: default;
+}
+
+/* Feedback Panel */
+.feedback-panel {
+    background-color: #F8F9FA;
+    border: 1px solid #BDC3C7;
+    border-radius: 5px;
+    padding: 15px;
+    margin: 10px 0;
+    max-height: 120px;
+    display: none;
+}
+
+.feedback-panel.show {
+    display: block;
+}
+
+.feedback-text {
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.feedback-text.correct {
+    color: #27AE60;
+}
+
+.feedback-text.incorrect {
+    color: #E74C3C;
+}
+
+.explanation-text {
+    font-size: 14px;
+    text-align: center;
+    color: #34495E;
+    max-height: 60px;
+    overflow-y: auto;
+}
+
+/* Buttons */
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    transition: background-color 0.2s;
+}
+
+.btn-primary {
+    background-color: #3498DB;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #2980B9;
+}
+
+.btn-large {
+    padding: 15px 30px;
+    font-size: 18px;
+    width: 200px;
+}
+
+.next-button {
+    width: 200px;
+    height: 40px;
+    margin: 20px auto 10px auto;
+    display: none;
+}
+
+.next-button.show {
+    display: block;
+}
+
+/* Results Screen */
+.results-screen {
+    text-align: center;
+    padding: 20px;
+}
+
+.results-title {
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #2C3E50;
+}
+
+.final-score {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.performance-text {
+    font-size: 18px;
+    margin-bottom: 30px;
+}
+
+.performance-excellent { color: #F1C40F; }
+.performance-good { color: #27AE60; }
+.performance-ok { color: #3498DB; }
+.performance-poor { color: #E74C3C; }
+
+.results-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.results-buttons .btn {
+    width: 150px;
+    height: 40px;
+}
+
+/* Footer */
+.footer {
+    background-color: #34495E;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    font-size: 12px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        margin: 0;
+    }
+
+    .main-content {
+        padding: 10px;
+    }
+
+    .welcome-title {
+        font-size: 24px;
+    }
+
+    .question-text {
+        font-size: 18px;
+    }
+
+    .option-button {
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    .results-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+/* Hidden class for page transitions */
+.hidden {
+    display: none !important;
+}

@@ -1,0 +1,370 @@
+﻿@page
+@model ResultsModel
+@{
+    ViewData["Title"] = "Resultater - Norske Kommuner Quiz";
+}
+
+<section class="results-screen" role="main" aria-labelledby="results-heading">
+    <h1 id="results-heading" class="results-title">Quiz fullført!</h1>
+    
+    <div class="score-summary" role="region" aria-labelledby="score-heading">
+        <h2 id="score-heading" class="visually-hidden">Dine resultater</h2>
+        <div class="final-score" 
+             tabindex="0"
+             role="status"
+             aria-live="polite"
+             aria-labelledby="score-label"
+             aria-describedby="score-details">
+            <div id="score-label" class="score-label">Din poengsum:</div>
+            <div class="score-value">@Model.Score/@Model.TotalQuestions</div>
+            <div class="score-percentage">(@(Math.Round(Model.Percentage, 1))%)</div>
+        </div>
+        <div id="score-details" class="score-explanation">
+            Du fikk @Model.Score riktige svar av @Model.TotalQuestions mulige spørsmål. 
+            Det tilsvarer @(Math.Round(Model.Percentage, 1)) prosent riktige svar.
+        </div>
+    </div>
+    
+    <div class="performance-summary" role="region" aria-labelledby="performance-heading">
+        <h2 id="performance-heading" class="visually-hidden">Prestasjonsvurdering</h2>
+        <div class="performance-indicator" 
+             tabindex="0"
+             role="status"
+             aria-labelledby="performance-label"
+             aria-describedby="performance-details">
+            <div id="performance-label" class="performance-label">Din prestasjon:</div>
+            <p class="performance-text @Model.PerformanceClass">
+                @Model.PerformanceMessage
+            </p>
+        </div>
+        <div id="performance-details" class="performance-explanation">
+            @{
+                string performanceLevel = Model.Percentage switch
+                {
+                    >= 90 => "Utmerket prestasjon",
+                    >= 70 => "God prestasjon", 
+                    >= 50 => "Akseptabel prestasjon",
+                    _ => "Du kan forbedre deg"
+                };
+            }
+            @performanceLevel basert på @(Math.Round(Model.Percentage, 1)) prosent riktige svar.
+        </div>
+    </div>
+    
+    <nav class="results-buttons" 
+         role="navigation" 
+         aria-label="Quiz handlinger">
+        <a href="/quiz" 
+           class="btn btn-primary"
+           role="button"
+           aria-describedby="restart-description">
+            🔄 Spill igjen
+        </a>
+        <a href="/" 
+           class="btn btn-primary"
+           role="button"
+           aria-describedby="home-description">
+            🏠 Tilbake til start
+        </a>
+    </nav>
+    
+    <div class="hidden-descriptions">
+        <div id="restart-description" class="visually-hidden">
+            Start en ny quiz med 12 nye tilfeldig valgte spørsmål
+        </div>
+        <div id="home-description" class="visually-hidden">
+            Gå tilbake til hovedsiden for å starte på nytt
+        </div>
+    </div>
+    
+    @if (Model.Percentage >= 90)
+    {
+        <div class="achievement" role="region" aria-labelledby="achievement-heading">
+            <h3 id="achievement-heading" class="visually-hidden">Prestasjon oppnådd</h3>
+            <div class="achievement-badge" 
+                 tabindex="0"
+                 role="img"
+                 aria-label="Prestasjonsbadge: Kommune-ekspert - Du har oppnådd toppresultat med @(Math.Round(Model.Percentage, 1)) prosent riktige svar">
+                <span style="font-size: 3rem;" aria-hidden="true">🏆</span>
+                <p><strong>Kommune-ekspert!</strong></p>
+                <p><small>Du har oppnådd toppresultat</small></p>
+            </div>
+        </div>
+    }
+    else if (Model.Percentage >= 70)
+    {
+        <div class="achievement" role="region" aria-labelledby="achievement-heading">
+            <h3 id="achievement-heading" class="visually-hidden">Prestasjon oppnådd</h3>
+            <div class="achievement-badge" 
+                 tabindex="0"
+                 role="img"
+                 aria-label="Prestasjonsbadge: Kommune-kjenner - Du har god kunnskap med @(Math.Round(Model.Percentage, 1)) prosent riktige svar">
+                <span style="font-size: 3rem;" aria-hidden="true">🥇</span>
+                <p><strong>Kommune-kjenner!</strong></p>
+                <p><small>Du har god kunnskap</small></p>
+            </div>
+        </div>
+    }
+</section>
+
+<style>
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* WCAG-Compliant Final Score Styling */
+.final-score {
+    background: #FFFFFF;
+    color: #2C3E50;
+    border: 3px solid #3498DB;
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+.final-score:focus {
+    outline: 3px solid #F39C12;
+    outline-offset: 3px;
+    border-color: #F39C12;
+    box-shadow: 0 6px 20px rgba(243, 156, 18, 0.3);
+}
+
+.score-label {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #34495E;
+    margin-bottom: 0.5rem;
+}
+
+.score-value {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 900;
+    color: #2C3E50;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    margin: 0.5rem 0;
+    line-height: 1.1;
+}
+
+.score-percentage {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #7F8C8D;
+    margin-top: 0.5rem;
+}
+
+.score-explanation {
+    background: #F8F9FA;
+    color: #2C3E50;
+    padding: 1.5rem;
+    border-radius: 10px;
+    border: 2px solid #E9ECEF;
+    font-size: 1.125rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Performance Indicator Styling */
+.performance-indicator {
+    background: #FFFFFF;
+    border: 2px solid #BDC3C7;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    transition: all 0.2s ease;
+}
+
+.performance-indicator:focus {
+    outline: 3px solid #F39C12;
+    outline-offset: 2px;
+    border-color: #F39C12;
+    box-shadow: 0 4px 15px rgba(243, 156, 18, 0.2);
+}
+
+.performance-label {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #2C3E50;
+    margin-bottom: 1rem;
+}
+
+.performance-explanation {
+    background: #F8F9FA;
+    color: #2C3E50;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    border: 1px solid #E9ECEF;
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 2rem;
+}
+
+/* Enhanced Performance Text Colors with Better Contrast */
+.performance-excellent { 
+    color: #D68910; /* Gold with better contrast */
+    font-weight: 700;
+}
+
+.performance-good { 
+    color: #196F3D; /* Darker green for better contrast */
+    font-weight: 700;
+}
+
+.performance-ok { 
+    color: #1B4F72; /* Darker blue for better contrast */
+    font-weight: 700;
+}
+
+.performance-poor { 
+    color: #A93226; /* Darker red for better contrast */
+    font-weight: 700;
+}
+
+.score-summary {
+    margin-bottom: 3rem;
+}
+
+.performance-summary {
+    margin-bottom: 3rem;
+}
+
+.achievement {
+    margin-top: 3rem;
+    text-align: center;
+}
+
+.achievement-badge {
+    display: inline-block;
+    padding: 2rem;
+    background: linear-gradient(135deg, #F1C40F 0%, #F39C12 100%);
+    border: 3px solid #D68910;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(241, 196, 15, 0.3);
+    color: #FFFFFF;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    transition: all 0.2s ease;
+}
+
+.achievement-badge:focus {
+    outline: 3px solid #2C3E50;
+    outline-offset: 3px;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(241, 196, 15, 0.4);
+}
+
+.achievement-badge p {
+    margin: 0.5rem 0;
+    color: #FFFFFF;
+}
+
+.hidden-descriptions {
+    position: absolute;
+    left: -9999px;
+}
+
+/* Enhanced button styling for results */
+.results-buttons .btn {
+    gap: 0.5rem;
+    font-weight: 600;
+}
+
+.results-buttons .btn:focus {
+    outline: 3px solid #F39C12;
+    outline-offset: 3px;
+}
+</style>
+
+@section Scripts {
+    <script>
+        (function() {
+            try {
+                console.log('[Results Debug]: Starting WCAG-compliant results page...');
+                
+                // Update score display for results
+                var scoreDisplay = document.getElementById('scoreDisplay');
+                var score = @Model.Score;
+                var total = @Model.TotalQuestions;
+                
+                if (scoreDisplay) {
+                    var scoreText = 'Poeng: ' + score + ' | Fullfort: ' + total + '/' + total;
+                    scoreDisplay.textContent = scoreText;
+                    console.log('[Results Debug]: Score display updated to: ' + scoreText);
+                } else {
+                    console.error('[Results Error]: scoreDisplay element not found!');
+                }
+                
+                document.addEventListener('DOMContentLoaded', function() {
+                    console.log('[Results Debug]: DOM loaded, setting up accessible results page...');
+                    
+                    // Announce results to screen readers
+                    setTimeout(function() {
+                        var announcement = 'Quiz fullført. Du fikk ' + score + ' av ' + total + ' riktige svar. Det tilsvarer ' + Math.round(@Model.Percentage * 10) / 10 + ' prosent. @Html.Raw(Model.PerformanceMessage.Replace("'", "\\'").Replace("\"", "\\\""))';
+                        
+                        var announcer = document.createElement('div');
+                        announcer.setAttribute('aria-live', 'assertive');
+                        announcer.setAttribute('aria-atomic', 'true');
+                        announcer.className = 'visually-hidden';
+                        announcer.textContent = announcement;
+                        document.body.appendChild(announcer);
+                        
+                        setTimeout(function() {
+                            if (announcer.parentNode) {
+                                document.body.removeChild(announcer);
+                            }
+                        }, 3000);
+                    }, 500);
+                    
+                    // Focus management
+                    var resultsHeading = document.getElementById('results-heading');
+                    if (resultsHeading) {
+                        resultsHeading.focus();
+                        console.log('[Results Debug]: Results heading focused');
+                    }
+                    
+                    // Enhanced keyboard navigation for all focusable elements
+                    var focusableElements = document.querySelectorAll('.final-score, .performance-indicator, .achievement-badge, .results-buttons .btn');
+                    console.log('[Results Debug]: Found ' + focusableElements.length + ' focusable elements');
+                    
+                    focusableElements.forEach(function(element, index) {
+                        element.addEventListener('keydown', function(e) {
+                            if (e.key === 'ArrowDown' || e.key === 'Tab' && !e.shiftKey) {
+                                var nextIndex = (index + 1) % focusableElements.length;
+                                if (e.key === 'ArrowDown') {
+                                    e.preventDefault();
+                                    focusableElements[nextIndex].focus();
+                                }
+                            } else if (e.key === 'ArrowUp' || e.key === 'Tab' && e.shiftKey) {
+                                var prevIndex = (index - 1 + focusableElements.length) % focusableElements.length;
+                                if (e.key === 'ArrowUp') {
+                                    e.preventDefault();
+                                    focusableElements[prevIndex].focus();
+                                }
+                            }
+                        });
+                    });
+                    
+                    console.log('[Results Debug]: WCAG-compliant results page setup complete');
+                });
+                
+            } catch (error) {
+                console.error('[Results Error]:', error);
+                // Fallback
+                var scoreDisplay = document.getElementById('scoreDisplay');
+                if (scoreDisplay) {
+                    scoreDisplay.textContent = 'Poeng: @Model.Score | Fullfort: @Model.TotalQuestions/@Model.TotalQuestions';
+                }
+            }
+        })();
+    </script>
+}

@@ -1,0 +1,81 @@
+﻿using MunicipalQuizGame.Services;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddRazorPages();
+builder.Services.AddScoped<QuizService>();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Error");
+    app.UseHsts();
+}
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+
+app.UseRouting();
+
+app.UseSession();
+app.UseAuthorization();
+
+app.MapRazorPages();
+
+// Fallback browser launcher (in case launchSettings.json doesn't work)
+if (app.Environment.IsDevelopment())
+{
+    var urls = app.Urls;
+    var url = urls.FirstOrDefault() ?? "http://localhost:5000";
+    
+    // Add a startup event to open browser
+    app.Lifetime.ApplicationStarted.Register(() =>
+    {
+        Task.Run(async () =>
+        {
+            await Task.Delay(500); // Small delay to ensure server is ready
+            
+            try
+            {
+                Console.WriteLine($"Opening browser at: {url}");
+                
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    var startInfo = new ProcessStartInfo
+                    {
+                        FileName = url,
+                        UseShellExecute = true,
+                        Verb = "open"
+                    };
+                    Process.Start(startInfo);
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.macOS))
+                {
+                    Process.Start("open", url);
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    Process.Start("xdg-open", url);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Could not open browser automatically: {ex.Message}");
+                Console.WriteLine($"Please manually open: {url}");
+            }
+        });
+    });
+}
+
+app.Run();

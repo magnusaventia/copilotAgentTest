@@ -1,0 +1,72 @@
+﻿using MunicipalQuizGame.Services;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddRazorPages();
+builder.Services.AddScoped<QuizService>();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Error");
+    app.UseHsts();
+}
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+
+app.UseRouting();
+
+app.UseSession();
+app.UseAuthorization();
+
+app.MapRazorPages();
+
+// Open browser automatically when in development mode
+if (app.Environment.IsDevelopment())
+{
+    var url = "https://localhost:5001"; // Default HTTPS URL
+    
+    Task.Run(async () =>
+    {
+        await Task.Delay(1000); // Wait 1 second for the server to start
+        
+        try
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = url,
+                    UseShellExecute = true
+                });
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.macOS))
+            {
+                Process.Start("open", url);
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                Process.Start("xdg-open", url);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unable to open browser: {ex.Message}");
+            Console.WriteLine($"Please open your browser and navigate to: {url}");
+        }
+    });
+}
+
+app.Run();

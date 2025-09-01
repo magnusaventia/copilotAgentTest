@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Norske Kommuner Quiz</title>
+    <link href="~/css/site.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>NORSKE KOMMUNER QUIZ</h1>
+            <div class="score-display" id="scoreDisplay">Poeng: 0 | Sporsmal: 0/12</div>
+        </header>
+
+        <main class="main-content">
+            @RenderBody()
+        </main>
+
+        <footer class="footer">
+            Test din kunnskap om norske kommuner
+        </footer>
+    </div>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

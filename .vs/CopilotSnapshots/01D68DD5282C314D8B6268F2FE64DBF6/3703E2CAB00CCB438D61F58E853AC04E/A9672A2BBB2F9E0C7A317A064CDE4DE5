@@ -1,0 +1,25 @@
+﻿@page
+@model ResultsModel
+@{
+    ViewData["Title"] = "Resultater - Norske Kommuner Quiz";
+}
+
+<div class="results-screen">
+    <h2 class="results-title">Quiz fullfort!</h2>
+    
+    <div class="final-score">Din poengsum: @Model.Score/@Model.TotalQuestions</div>
+    
+    <div class="performance-text @Model.PerformanceClass">@Model.PerformanceMessage</div>
+    
+    <div class="results-buttons">
+        <a href="/quiz" class="btn btn-primary">Spill igjen</a>
+        <a href="/" class="btn btn-primary">Tilbake til start</a>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Update score display for results
+        document.getElementById('scoreDisplay').textContent = 'Poeng: @Model.Score | Fullført: @Model.TotalQuestions/@Model.TotalQuestions';
+    </script>
+}

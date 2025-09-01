@@ -1,0 +1,187 @@
+﻿@page
+@model ResultsModel
+@{
+    ViewData["Title"] = "Resultater - Norske Kommuner Quiz";
+}
+
+<section class="results-screen" role="main" aria-labelledby="results-heading">
+    <h1 id="results-heading" class="results-title">Quiz fullført!</h1>
+    
+    <div class="score-summary" role="region" aria-labelledby="score-heading">
+        <h2 id="score-heading" class="visually-hidden">Dine resultater</h2>
+        <div class="final-score" aria-describedby="score-details">
+            Din poengsum: @Model.Score/@Model.TotalQuestions
+        </div>
+        <div id="score-details" class="visually-hidden">
+            Du fikk @Model.Score riktige svar av @Model.TotalQuestions mulige. 
+            Det tilsvarer @(Math.Round(Model.Percentage, 1)) prosent.
+        </div>
+    </div>
+    
+    <div class="performance-summary" role="region" aria-labelledby="performance-heading">
+        <h2 id="performance-heading" class="visually-hidden">Prestasjonsvurdering</h2>
+        <p class="performance-text @Model.PerformanceClass" 
+           aria-describedby="performance-details">
+            @Model.PerformanceMessage
+        </p>
+        <div id="performance-details" class="visually-hidden">
+            @{
+                string performanceLevel = Model.Percentage switch
+                {
+                    >= 90 => "Utmerket prestasjon",
+                    >= 70 => "God prestasjon", 
+                    >= 50 => "Akseptabel prestasjon",
+                    _ => "Du kan forbedre deg"
+                };
+            }
+            @performanceLevel basert på @(Math.Round(Model.Percentage, 1)) prosent riktige svar.
+        </div>
+    </div>
+    
+    <nav class="results-buttons" 
+         role="navigation" 
+         aria-label="Quiz handlinger">
+        <a href="/quiz" 
+           class="btn btn-primary"
+           role="button"
+           aria-describedby="restart-description">
+            🔄 Spill igjen
+        </a>
+        <a href="/" 
+           class="btn btn-primary"
+           role="button"
+           aria-describedby="home-description">
+            🏠 Tilbake til start
+        </a>
+    </nav>
+    
+    <div class="hidden-descriptions">
+        <div id="restart-description" class="visually-hidden">
+            Start en ny quiz med 12 nye tilfeldig valgte spørsmål
+        </div>
+        <div id="home-description" class="visually-hidden">
+            Gå tilbake til hovedsiden for å starte på nytt
+        </div>
+    </div>
+    
+    @if (Model.Percentage >= 90)
+    {
+        <div class="achievement" role="region" aria-labelledby="achievement-heading">
+            <h3 id="achievement-heading" class="visually-hidden">Prestasjon oppnådd</h3>
+            <div class="achievement-badge" aria-label="Prestasjonsbadge: Kommune-ekspert">
+                <span style="font-size: 3rem;">🏆</span>
+                <p><strong>Kommune-ekspert!</strong></p>
+                <p><small>Du har oppnådd toppresultat</small></p>
+            </div>
+        </div>
+    }
+    else if (Model.Percentage >= 70)
+    {
+        <div class="achievement" role="region" aria-labelledby="achievement-heading">
+            <h3 id="achievement-heading" class="visually-hidden">Prestasjon oppnådd</h3>
+            <div class="achievement-badge" aria-label="Prestasjonsbadge: Kommune-kjenner">
+                <span style="font-size: 3rem;">🥇</span>
+                <p><strong>Kommune-kjenner!</strong></p>
+                <p><small>Du har god kunnskap</small></p>
+            </div>
+        </div>
+    }
+</section>
+
+<style>
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.score-summary {
+    margin-bottom: 2rem;
+}
+
+.performance-summary {
+    margin-bottom: 3rem;
+}
+
+.achievement {
+    margin-top: 3rem;
+    text-align: center;
+}
+
+.achievement-badge {
+    display: inline-block;
+    padding: 2rem;
+    background: linear-gradient(135deg, #F1C40F 0%, #F39C12 100%);
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(241, 196, 15, 0.3);
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.achievement-badge p {
+    margin: 0.5rem 0;
+}
+
+.hidden-descriptions {
+    position: absolute;
+    left: -9999px;
+}
+
+/* Enhanced button styling for results */
+.results-buttons .btn {
+    gap: 0.5rem;
+    font-weight: 600;
+}
+
+.results-buttons .btn:focus {
+    outline: 3px solid #F39C12;
+    outline-offset: 3px;
+}
+</style>
+
+@section Scripts {
+    <script>
+        // Update score display for results
+        document.getElementById('scoreDisplay').textContent = 'Poeng: @Model.Score | Fullfort: @Model.TotalQuestions/@Model.TotalQuestions';
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Announce results to screen readers
+            const announcement = 'Quiz fullfort. Du fikk @Model.Score av @Model.TotalQuestions riktige. @Html.Raw(Model.PerformanceMessage.Replace("'", "\\'").Replace("\"", "\\\""))';
+            
+            setTimeout(() => {
+                const announcer = document.createElement('div');
+                announcer.setAttribute('aria-live', 'polite');
+                announcer.setAttribute('aria-atomic', 'true');
+                announcer.className = 'visually-hidden';
+                announcer.textContent = announcement;
+                document.body.appendChild(announcer);
+                setTimeout(() => document.body.removeChild(announcer), 3000);
+            }, 500);
+            
+            // Focus management
+            document.getElementById('results-heading').focus();
+            
+            // Enhanced keyboard navigation for action buttons
+            const actionButtons = document.querySelectorAll('.results-buttons .btn');
+            actionButtons.forEach((button, index) => {
+                button.addEventListener('keydown', function(e) {
+                    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        const nextIndex = (index + 1) % actionButtons.length;
+                        actionButtons[nextIndex].focus();
+                    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        const prevIndex = (index - 1 + actionButtons.length) % actionButtons.length;
+                        actionButtons[prevIndex].focus();
+                    }
+                });
+            });
+        });
+    </script>
+}

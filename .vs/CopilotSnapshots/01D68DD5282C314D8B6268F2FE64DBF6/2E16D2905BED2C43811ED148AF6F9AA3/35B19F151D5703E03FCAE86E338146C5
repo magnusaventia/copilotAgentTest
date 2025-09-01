@@ -1,0 +1,18 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Norske Kommuner Quiz";
+}
+
+<div id="welcomeScreen" class="welcome-screen">
+    <h2 class="welcome-title">Velkommen til Norske Kommuner Quiz!</h2>
+    <p class="welcome-subtitle">Test din kunnskap om norske kommuner!</p>
+    <a href="/quiz" class="btn btn-primary btn-large">Start Quiz</a>
+</div>
+
+@section Scripts {
+    <script>
+        // Update score display for welcome screen
+        document.getElementById('scoreDisplay').textContent = 'Poeng: 0 | Sporsmal: 0/12';
+    </script>
+}

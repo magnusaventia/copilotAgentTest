@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Norske Kommuner Quiz</title>
+    <meta name="description" content="Test din kunnskap om norske kommuner med denne interaktive quiz-applikasjonen. Lær om geografi, historie og fakta om norske kommuner." />
+    <link href="~/css/site.css" rel="stylesheet" />
+    
+    <!-- Preload important font for better performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+</head>
+<body>
+    <!-- Skip to main content link for screen readers -->
+    <a href="#main-content" class="skip-link">Hopp til hovedinnhold</a>
+    
+    <div class="app-container">
+        <header class="header" role="banner">
+            <div class="header-content">
+                <h1 id="site-title">NORSKE KOMMUNER QUIZ</h1>
+                <div class="score-display" id="scoreDisplay" aria-live="polite" aria-label="Quiz fremdrift">
+                    Poeng: 0 | Sporsmal: 0/12
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content" id="main-content" role="main">
+            @RenderBody()
+        </main>
+
+        <footer class="footer" role="contentinfo">
+            <p>Test din kunnskap om norske kommuner</p>
+            <p><small>Tilgjengelig for alle brukere - folger WCAG 2.1 AA standarder</small></p>
+        </footer>
+    </div>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

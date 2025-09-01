@@ -1,0 +1,112 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using MunicipalQuizGame.Models;
+using MunicipalQuizGame.Services;
+
+namespace MunicipalQuizGame.Pages
+{
+    public class QuizModel : PageModel
+    {
+        private readonly QuizService _quizService;
+
+        public QuizModel(QuizService quizService)
+        {
+            _quizService = quizService;
+        }
+
+        public QuizQuestion? CurrentQuestion { get; set; }
+        public int CurrentQuestionIndex { get; set; }
+        public int TotalQuestions { get; set; }
+        public int Score { get; set; }
+        public bool IsAnswered { get; set; }
+        public bool IsCorrect { get; set; }
+        public int? SelectedOption { get; set; }
+
+        public IActionResult OnGet()
+        {
+            LoadQuizSession();
+            LoadCurrentQuestion();
+            return Page();
+        }
+
+        public IActionResult OnPost(int selectedOption)
+        {
+            LoadQuizSession();
+            
+            if (CurrentQuestion == null) 
+            {
+                // If no current question, reinitialize
+                InitializeQuizSession();
+                LoadCurrentQuestion();
+                return Page();
+            }
+            
+            SelectedOption = selectedOption;
+            IsCorrect = selectedOption == CurrentQuestion.CorrectAnswerIndex;
+            IsAnswered = true;
+            
+            if (IsCorrect)
+            {
+                Score++;
+                HttpContext.Session.SetInt32("Score", Score);
+            }
+            
+            return Page();
+        }
+
+        public IActionResult OnGetNext()
+        {
+            LoadQuizSession();
+            CurrentQuestionIndex++;
+            
+            if (CurrentQuestionIndex >= TotalQuestions)
+            {
+                return RedirectToPage("/Results");
+            }
+            
+            HttpContext.Session.SetInt32("CurrentQuestionIndex", CurrentQuestionIndex);
+            LoadCurrentQuestion();
+            return Page();
+        }
+
+        private void InitializeQuizSession()
+        {
+            var questions = _quizService.GetShuffledQuestions(12);
+            HttpContext.Session.SetString("Questions", System.Text.Json.JsonSerializer.Serialize(questions));
+            HttpContext.Session.SetInt32("CurrentQuestionIndex", 0);
+            HttpContext.Session.SetInt32("Score", 0);
+            HttpContext.Session.SetInt32("TotalQuestions", questions.Count);
+            
+            CurrentQuestionIndex = 0;
+            Score = 0;
+            TotalQuestions = questions.Count;
+        }
+
+        private void LoadQuizSession()
+        {
+            // Check if session exists, if not initialize
+            if (HttpContext.Session.GetString("Questions") == null)
+            {
+                InitializeQuizSession();
+                return;
+            }
+            
+            CurrentQuestionIndex = HttpContext.Session.GetInt32("CurrentQuestionIndex") ?? 0;
+            Score = HttpContext.Session.GetInt32("Score") ?? 0;
+            TotalQuestions = HttpContext.Session.GetInt32("TotalQuestions") ?? 12;
+        }
+
+        private void LoadCurrentQuestion()
+        {
+            var questionsJson = HttpContext.Session.GetString("Questions");
+            if (!string.IsNullOrEmpty(questionsJson))
+            {
+                var questions = System.Text.Json.JsonSerializer.Deserialize<List<QuizQuestion>>(questionsJson);
+                if (questions != null && CurrentQuestionIndex < questions.Count)
+                {
+                    CurrentQuestion = questions[CurrentQuestionIndex];
+                }
+            }
+        }
+    }
+}
